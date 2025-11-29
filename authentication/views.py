@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
-from .serializers import CustomUserSerializer, LoginSerializer
+from .serializers import CustomUserSerializer, LoginSerializer, DeleteUserSerializer
 from rest_framework.generics import CreateAPIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 # Create your views here.
 
@@ -47,4 +47,19 @@ class LoginView(CreateAPIView):
                 "farm_size": user.farm_size,
                 # "token": token,  # Include token when implemented
             },  
+        }, status=status.HTTP_200_OK)
+    
+class DeleteUserView(CreateAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = DeleteUserSerializer
+
+    def delete(self, request, *args, **kwargs):
+        serializers = self.get_serializer(data=request.data)
+        serializers.is_valid(raise_exception=True)
+        user = serializers.validated_data['user']
+
+        serializers.delete_user()
+
+        return Response({
+            "message": "User deleted successfully.",
         }, status=status.HTTP_200_OK)

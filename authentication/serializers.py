@@ -45,3 +45,19 @@ class LoginSerializer(serializers.Serializer):
 
         attrs['user'] = user
         return attrs
+    
+class DeleteUserSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+
+    def validate_user_id(self, value):
+        try:
+            user = CustomUser.objects.get(id=value)
+        except CustomUser.DoesNotExist:
+            raise serializers.ValidationError("User does not exist.")
+        return value
+    
+    def delete_user(self):
+        user_id = self.validated_data['id']
+        user = CustomUser.objects.get(id=user_id)
+        user.delete()
+        return {"message": "User deleted successfully."}
