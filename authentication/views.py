@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer, LoginSerializer
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import AllowAny
 
@@ -29,7 +29,7 @@ class RegisterView(CreateAPIView):
     
 class LoginView(CreateAPIView):
     permission_classes = [AllowAny]
-    serializer_class = CustomUserSerializer
+    serializer_class = LoginSerializer
 
     # Implement login logic here
     def post(self, request, *args, **kwargs):

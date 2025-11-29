@@ -23,7 +23,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         return attrs
 
-class loginSerializer(serializers.Serializer):
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(read_only=True)
+    email = serializers.EmailField()
     password = serializers.CharField(
         style = {"input_type":"password"}, write_only=True)
 
