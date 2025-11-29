@@ -1,0 +1,3 @@
+Futurize Hackathon
+
+Team CropGuard
