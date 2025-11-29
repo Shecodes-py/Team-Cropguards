@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     'drf_yasg',
     "authentication",
+    "rest_framework_simplejwt",
 ]
 
 MIDDLEWARE = [
@@ -183,3 +184,10 @@ ACCOUNT_EMAIL_VERIFICATION ="none" # email verification can be set to mandatory 
 ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
 ACCOUNT_USERNAME_REQUIRED = False
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ]
+}

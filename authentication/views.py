@@ -38,6 +38,7 @@ class LoginView(CreateAPIView):
         user = serializers.validated_data['user']
 
         # generate token logic to be added here
+        tokens = user.tokens() 
 
         return Response({
             "message": "Login Successful.",
@@ -45,8 +46,9 @@ class LoginView(CreateAPIView):
                 "username": user.username,
                 "email": user.email,
                 "farm_size": user.farm_size,
-                # "token": token,  # Include token when implemented
-            },  
+                 },  
+            "refresh": tokens["refresh_token"],
+            "access": tokens["access_token"],
         }, status=status.HTTP_200_OK)
     
 class DeleteUserView(CreateAPIView):

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from rest_framework_simplejwt.tokens import RefreshToken
 
 # Create your models here.
 
@@ -13,3 +14,17 @@ class CustomUser(AbstractUser):
     state = models.CharField(max_length=30)
     farm_size = models.DecimalField(max_digits=10, decimal_places=2)
     date_joined = models.DateTimeField(auto_now_add=True)
+
+    def tokens(self):
+        refresh = RefreshToken.for_user(self)
+        # attach custom claims
+        refresh['role'] = self.role
+        refresh['email'] = self.email
+
+        return {
+            "refresh_token": str(refresh),
+            "access_token": str(refresh.access_token),
+        }
+
+    def __str__(self):
+        return self.username
