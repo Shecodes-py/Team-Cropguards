@@ -2,7 +2,7 @@ from .models import CustomUser
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class RegisterUserSerializer(serializers.ModelSerializer):
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
@@ -22,25 +22,31 @@ class CustomUserSerializer(serializers.ModelSerializer):
         if attrs['password'] != attrs['password2']:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
         return attrs
+    
+    def validate_email(self, value):
+        if CustomUser.objects.filter(email=value).exists():
+            raise serializers.ValidationError("A user with this email exists.")
+        return value
 
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField(read_only=True)
-    email = serializers.EmailField()
+    username = serializers.CharField()
+    # email = serializers.EmailField()
     password = serializers.CharField(
         style = {"input_type":"password"}, write_only=True)
 
     def validate(self, attrs):
-        email = attrs.get('email')
+        # email = attrs.get('email')
+        username = attrs.get("username")
         password = attrs.get('password')
 
-        if email and password:
+        if username and password:
             user = authenticate(request=self.context.get('request'),
-                                email=email, password=password)
+                                username=username, password=password)
             if not user:
                 msg = 'Unable to log in with provided credentials.'
                 raise serializers.ValidationError(msg, code='authorization')
         else:
-            msg = 'Must include "email" and "password".'
+            msg = 'Must include "username" and "password".'
             raise serializers.ValidationError(msg, code='authorization')
 
         attrs['user'] = user

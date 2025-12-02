@@ -97,8 +97,8 @@ WSGI_APPLICATION = 'CropGuard.wsgi.application'
 DATABASES = {
     "default": dj_database_url.config(
         default=os.environ.get("DATABASE_URL"),
-        conn_max_age=0,
-        ssl_require=False
+        conn_max_age=0, # set to 600 for render 
+        ssl_require=False, #Set to True or render db
     )
 }
 

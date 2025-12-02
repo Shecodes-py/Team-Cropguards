@@ -18,7 +18,6 @@ class CustomUser(AbstractUser):
     def tokens(self):
         refresh = RefreshToken.for_user(self)
         # attach custom claims
-        refresh['role'] = self.role
         refresh['email'] = self.email
 
         return {
